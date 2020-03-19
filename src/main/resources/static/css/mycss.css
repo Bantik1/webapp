@@ -1,0 +1,15 @@
+TABLE {
+    border-collapse: collapse;
+}
+TH {
+    background: lavender;
+    text-align: right;
+}
+TD {
+    background: azure;
+    text-align: left;
+}
+TH, TD {
+    border: 1px solid black;
+    padding: 4px;
+}

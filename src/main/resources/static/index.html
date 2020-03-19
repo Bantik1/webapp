@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <title>Мой первый сервис</title>
+
+    <link rel="stylesheet" href="css/mycss.css"/>
+
+    <script type="text/javascript">
+        function addUser() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/select/user/add/user");
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.onload = (e) => {
+                alert("Получен ответ" + e.target.response)
+            };
+            var firstname = document.getElementById("input_firstname").value;
+            var secondname = document.getElementById("input_secondname").value;
+            var birthday = document.getElementById("input_birthday").value;
+            var numberPhone = document.getElementById("input_numberPhone").value;
+            var params = {
+                "name": firstname,
+                "secondname": secondname,
+                "birthday": birthday,
+                "numberPhone": numberPhone
+            };
+            xhr.send(JSON.stringify(params));
+        }
+
+        function getUser() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/select/user/by/id");
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.onload = (e) => {
+                alert("Получен ответ" + e.target.response)
+            };
+            var user_id = document.getElementById("input_user_id").value;
+            var params = {"id": user_id};
+            xhr.send(JSON.stringify(params));
+        }
+    </script>
+</head>
+
+<body>
+<table>
+    <tr>
+        <th>Введите имя:</th>
+        <td><input id="input_firstname" type="text" value="Alex"></td>
+    </tr>
+    <tr>
+        <th>Введите фамилию:</th>
+        <td><input id="input_secondname" type="text" value="Kill"></td>
+    </tr>
+    <tr>
+        <th>Введите дату рождения:</th>
+        <td><input id="input_birthday" type="date" value=""></td>
+        </td>
+    </tr>
+    <tr>
+        <th>Введите номер телефона:</th>
+        <td><input id="input_numberPhone" type="text" value="9175939227"></td>
+    </tr>
+</table>
+<input type="submit" value="Отправить" onclick="addUser()">
+</body>
+</html>
