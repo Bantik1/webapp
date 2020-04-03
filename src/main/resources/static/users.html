@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get User</title>
+    <link rel="stylesheet" href="css/mycss.css"/>
+    <script type="text/javascript">
+        function getUser() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/select/user/by/id");
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.onload = (e) => {
+                var user = JSON.parse(e.target.response);
+                document.getElementById("input_firstname").textContent = user.name;
+                document.getElementById("input_secondname").textContent = user.secondname;
+                document.getElementById("input_birthday").textContent = user.birthday;
+                document.getElementById("input_numberPhone").textContent = user.numberPhone;
+                document.getElementById("input_groupNumber").textContent = user.groupNumber;
+                document.getElementById("input_info").textContent = user.info;
+                document.getElementById("input_gender").textContent = user.gender;
+            };
+            var user_id = document.getElementById("input_user_id").value;
+            var params = {"id": user_id};
+            xhr.send(JSON.stringify(params));
+        }
+    </script>
+</head>
+<body>
+<table>
+    <tr>
+        <th>Имя:</th>
+        <td id="input_firstname"></td>
+    </tr>
+    <tr>
+        <th>Фамилия:</th>
+        <td id="input_secondname"></td>
+    </tr>
+    <tr>
+        <th>День рождения:</th>
+        <td id="input_birthday"></td>
+    </tr>
+    <tr>
+        <th>Номер телефона:</th>
+        <td id="input_numberPhone"></td>
+    </tr>
+    <tr>
+        <th>Номер группы:</th>
+        <td id="input_groupNumber"></td>
+    </tr>
+    <tr>
+        <th>Род деятельности:</th>
+        <td id="input_info"></td>
+    </tr>
+    <tr>
+        <th>Пол:</th>
+        <td id="input_gender">
+        </td>
+    </tr>
+</table>
+<br>
+<input type="number" id="input_user_id">
+<input type="button" value="Найти" onclick="getUser()">
+<br>
+<input type="button" value="Перейти к заполнению формы" onclick="window.location='index.html'">
+</body>
+</html>
