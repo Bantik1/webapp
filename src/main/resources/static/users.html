@@ -19,13 +19,28 @@
                 document.getElementById("input_info").textContent = user.info;
                 document.getElementById("input_gender").textContent = user.gender;
             };
-            var user_id = document.getElementById("input_user_id").value;
+            var user_id = document.getElementById("select").value;
             var params = {"id": user_id};
             xhr.send(JSON.stringify(params));
         }
+
+        function getAllId() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/select/user/get/all/id");
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.send();
+            xhr.onload = (e) => {
+                var allId = JSON.parse(e.target.response);
+                var id = allId.listId;
+                for (var i = 0; i < id.length; i++) {
+                    var option = new Option(id[i], id[i]);
+                    document.getElementById("select").append(option);
+                }
+            }
+        }
     </script>
 </head>
-<body>
+<body onload="getAllId()">
 <table>
     <tr>
         <th>Имя:</th>
@@ -58,9 +73,9 @@
     </tr>
 </table>
 <br>
-<input type="number" id="input_user_id">
+<select id="select"></select>
 <input type="button" value="Найти" onclick="getUser()">
-<br>
+<br><br>
 <input type="button" value="Перейти к заполнению формы" onclick="window.location='index.html'">
 </body>
 </html>

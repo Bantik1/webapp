@@ -1,5 +1,6 @@
 package com.example.web.app.controllers;
 
+import com.example.web.app.api.request.AllUsersId;
 import com.example.web.app.api.request.UserByIdRequest;
 import com.example.web.app.dao.DbSqlite;
 import com.example.web.app.dao.model.User;
@@ -39,5 +40,15 @@ public class SelectUserController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(dbSqlite.addUser(user), headers, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Получить все ID в базе данных")
+    @RequestMapping(value = "get/all/id", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AllUsersId> getUsersId() {
+        AllUsersId listId = dbSqlite.getAllUsersId();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(listId, headers, HttpStatus.OK);
     }
 }
