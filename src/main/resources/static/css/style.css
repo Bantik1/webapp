@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+.content1 p {
+  font-family: 'Open Sans';
+  font-size: 24px;
+}
+
+.nav ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+  margin-top:0px;
+  background:#F44;
+  height: 50px;
+  position: fixed;
+  width: 100%;
+}
+.nav a {
+  text-decoration: none;
+  background:#FF4444;
+  color:#fff;
+  padding:0px 15px;
+  font-family: 'Open Sans'; /*меняем шрифт*/
+  line-height:50px; /*ровняем меню по вертикали*/
+  display: block;
+  border-right: 1px solid #F36262; /*добавляем бордюр справа*/
+}
+
+.nav a:hover {
+  background:#D43737;/*добавляем эффект при наведении*/
+}
+.nav li {
+  float:right; /*Размещаем список горизонтально для реализации меню*/
+}
+
+.content1 {
+  margin: 0px;
+  width: 100%;
+  height: 800px;
+  background-image: url(../images/bg1.jpeg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 50px;
+  text-align: center;
+}
+.content1 h1 {
+  margin:  25px 0 25px 0;
+}
+.blok  {
+  width: 100%;
+  height: 400px;
+  float: left;
+}
+.content2 {
+  background-image: url(../images/bg2.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 0px;
+  width: 100%;
+  height: 600px;
+}
+.content2_blok {
+  width: 32%;
+  height: 500px;
+  float: left;
+  text-align: center;
+}
+.content2_blok p, h3 {
+    font-family: 'Open Sans';
+    font-size: 20px;
+}
+.footer {
+  margin-bottom: 0px;
+  text-align: center;
+  font-family: 'Open Sans';
+  font-size: 20px;
+  height: 50px;
+  background: #F44;
+}
+.footer p {
+  padding-top: 15px;
+  margin-top: 0px;
+}
