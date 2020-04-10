@@ -91,7 +91,6 @@ public class DbSqlite implements InitializingBean {
 
     public AllUsersId getAllUsersId() {
         String query = "select ID from USER";
-        System.out.println(query);
         AllUsersId idList = new AllUsersId();
         List<Integer> list = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);

@@ -2,9 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Get User</title>
-    <link rel="stylesheet" href="css/mycss.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <title>My Blog</title>
+
     <script type="text/javascript">
+        function getAllId() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/select/user/get/all/id");
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.send();
+            xhr.onload = (e) => {
+                var allId = JSON.parse(e.target.response);
+                var id = allId.listId;
+                for (var i = 0; i < id.length; i++) {
+                    var option = new Option(id[i], id[i]);
+                    document.getElementById("select").append(option);
+                }
+            }
+        }
+
         function getUser() {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "api/select/user/by/id");
@@ -24,58 +44,69 @@
             xhr.send(JSON.stringify(params));
         }
 
-        function getAllId() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "api/select/user/get/all/id");
-            xhr.setRequestHeader("Content-type", "application/json");
-            xhr.send();
-            xhr.onload = (e) => {
-                var allId = JSON.parse(e.target.response);
-                var id = allId.listId;
-                for (var i = 0; i < id.length; i++) {
-                    var option = new Option(id[i], id[i]);
-                    document.getElementById("select").append(option);
-                }
+        function nextUser() {
+            var length = document.getElementById("select").length;
+            var index = document.getElementById("select").selectedIndex;
+            if (index !== -1) {
+                getUser();
+            }
+            if (index === length - 1) {
+                alert("Больше пользователей нет");
+            } else if (index < length - 1) {
+                document.getElementById("select").selectedIndex++;
             }
         }
+
+        function prevUser(){
+            if (document.getElementById("select").selectedIndex !== -1) {
+                getUser();
+            }
+            if (document.getElementById("select").selectedIndex === 0) {
+                alert("Больше пользователей нет")
+            } else if (document.getElementById("select").selectedIndex > 0) {
+                document.getElementById("select").selectedIndex--;
+            }
+        }
+
+        window.onload = getAllId();
     </script>
 </head>
-<body onload="getAllId()">
-<table>
-    <tr>
-        <th>Имя:</th>
-        <td id="input_firstname"></td>
-    </tr>
-    <tr>
-        <th>Фамилия:</th>
-        <td id="input_secondname"></td>
-    </tr>
-    <tr>
-        <th>День рождения:</th>
-        <td id="input_birthday"></td>
-    </tr>
-    <tr>
-        <th>Номер телефона:</th>
-        <td id="input_numberPhone"></td>
-    </tr>
-    <tr>
-        <th>Номер группы:</th>
-        <td id="input_groupNumber"></td>
-    </tr>
-    <tr>
-        <th>Род деятельности:</th>
-        <td id="input_info"></td>
-    </tr>
-    <tr>
-        <th>Пол:</th>
-        <td id="input_gender">
-        </td>
-    </tr>
-</table>
-<br>
-<select id="select"></select>
-<input type="button" value="Найти" onclick="getUser()">
-<br><br>
-<input type="button" value="Перейти к заполнению формы" onclick="window.location='index.html'">
+<body>
+<div class="header">
+
+    <div class="nav">
+        <ul>
+            <li><a href="#Obo">Обо мне</a></li>
+            <li><a href="#Cont">Контакты</a></li>
+            <li><a href="index.html">Перейти к регистрации</a></li>
+        </ul>
+    </div>
+</div>
+<div class="content1">
+    <div id="Obo"><h1>Обо мне</h1></div>
+    <div class="blok">
+        <p>Давайте знакомиться!</p>
+        <p>Меня зовут <label id="input_firstname"></label> <label id="input_secondname"></label></p>
+        <p>Мой день рождения <label id="input_birthday"></label></p>
+        <p>Учусь в группе <label id="input_groupNumber"></label></p>
+    </div>
+</div>
+<div class="content2">
+    <div class="content2_blok" id="Cont">
+        <h3>Контакты</h3>
+        <p><img src="images/what.png" width="20" height="20" alt="what"> <label id="input_numberPhone"></label></p>
+    </div>
+    <div class="content2_blok">
+        <h3>Информация</h3>
+        <p id="input_info"></p>
+        <p>Пол: <label id="input_gender"></label></p>
+    </div>
+    <div class="content2_blok">
+        <h3>Найти пользователя</h3>
+        <select id="select" onchange="getUser()"></select>
+        <input type="button" value="Следующий" onclick="nextUser()">
+        <input type="button" value="Предыдущий" onclick="prevUser()">
+    </div>
+</div>
 </body>
 </html>
