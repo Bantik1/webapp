@@ -42,27 +42,6 @@ public class DbSqlite implements InitializingBean {
         }
     }
 
-    public User selectUserById(int id) {
-        String query = "select * from USER where id = " + id;
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
-             Statement stat = conn.createStatement()) {
-            ResultSet resultSet = stat.executeQuery(query);
-            User user = new User();
-            user.setId(resultSet.getInt("id"));
-            user.setSecondname(resultSet.getString("secondname"));
-            user.setBirthday(resultSet.getDate("birthday"));
-            user.setName(resultSet.getString("name"));
-            user.setNumberPhone(resultSet.getString("phone_number"));
-            user.setGroupNumber(resultSet.getString("group_number"));
-            user.setInfo(resultSet.getString("info"));
-            user.setGender(resultSet.getString("gender"));
-            return user;
-        } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
-            return new User();
-        }
-    }
-
     public Boolean addUser(User user) {
         StringBuilder query = new StringBuilder("insert into USER (name, secondname, birthday, phone_number, group_number, info, gender) values ('");
         query.append(user.getName());
@@ -86,24 +65,68 @@ public class DbSqlite implements InitializingBean {
             log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
             return null;
         }
-
     }
 
-    public AllUsersId getAllUsersId() {
-        String query = "select ID from USER";
-        AllUsersId idList = new AllUsersId();
-        List<Integer> list = new ArrayList<>();
+    public User getFirstUser() {
+        String query = "select * from USER limit 1";
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
              Statement stat = conn.createStatement()) {
             ResultSet resultSet = stat.executeQuery(query);
-            while (resultSet.next()) {
-                list.add(resultSet.getInt("ID"));
-            }
-            idList.setListId(list);
-            return idList;
+            User user = new User();
+            user.setId(resultSet.getInt("id"));
+            user.setSecondname(resultSet.getString("secondname"));
+            user.setBirthday(resultSet.getDate("birthday"));
+            user.setName(resultSet.getString("name"));
+            user.setNumberPhone(resultSet.getString("phone_number"));
+            user.setGroupNumber(resultSet.getString("group_number"));
+            user.setInfo(resultSet.getString("info"));
+            user.setGender(resultSet.getString("gender"));
+            return user;
         } catch (SQLException ex) {
             log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
-            return new AllUsersId();
+            return new User();
+        }
+    }
+
+    public User nextUser(int id) {
+        String query = "select * from USER where ID > %s limit 1";
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+             Statement stat = conn.createStatement()) {
+            ResultSet resultSet = stat.executeQuery(String.format(query, id));
+            User user = new User();
+            user.setId(resultSet.getInt("id"));
+            user.setSecondname(resultSet.getString("secondname"));
+            user.setBirthday(resultSet.getDate("birthday"));
+            user.setName(resultSet.getString("name"));
+            user.setNumberPhone(resultSet.getString("phone_number"));
+            user.setGroupNumber(resultSet.getString("group_number"));
+            user.setInfo(resultSet.getString("info"));
+            user.setGender(resultSet.getString("gender"));
+            return user;
+        } catch (SQLException ex) {
+            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            return new User();
+        }
+    }
+
+    public User prevUser(int id) {
+        String query = "select * from USER where ID < %s order by id desc limit 1";
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+             Statement stat = conn.createStatement()) {
+            ResultSet resultSet = stat.executeQuery(String.format(query, id));
+            User user = new User();
+            user.setId(resultSet.getInt("id"));
+            user.setSecondname(resultSet.getString("secondname"));
+            user.setBirthday(resultSet.getDate("birthday"));
+            user.setName(resultSet.getString("name"));
+            user.setNumberPhone(resultSet.getString("phone_number"));
+            user.setGroupNumber(resultSet.getString("group_number"));
+            user.setInfo(resultSet.getString("info"));
+            user.setGender(resultSet.getString("gender"));
+            return user;
+        } catch (SQLException ex) {
+            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            return new User();
         }
     }
 }

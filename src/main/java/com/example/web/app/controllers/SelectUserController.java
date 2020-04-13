@@ -23,11 +23,31 @@ public class SelectUserController {
         this.dbSqlite = dbSqlite;
     }
 
-    @ApiOperation(value = "Выборка User по id")
-    @RequestMapping(value = "by/id", method = RequestMethod.POST,
+    @ApiOperation(value = "get first user")
+    @RequestMapping(value = "get/first/user", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> selectUserById(@RequestBody UserByIdRequest id) {
-        User user = dbSqlite.selectUserById(id.getId());
+    public ResponseEntity<User> getFirstUser() {
+        User user = dbSqlite.getFirstUser();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(user, headers, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "next user")
+    @RequestMapping(value = "next/user", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> nextUser(@RequestBody UserByIdRequest id) {
+        User user = dbSqlite.nextUser(id.getId());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(user, headers, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "prev user")
+    @RequestMapping(value = "prev/user", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> prevUser(@RequestBody UserByIdRequest id) {
+        User user = dbSqlite.prevUser(id.getId());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(user, headers, HttpStatus.OK);
@@ -40,15 +60,5 @@ public class SelectUserController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(dbSqlite.addUser(user), headers, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "Получить все ID в базе данных")
-    @RequestMapping(value = "get/all/id", method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AllUsersId> getUsersId() {
-        AllUsersId listId = dbSqlite.getAllUsersId();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity<>(listId, headers, HttpStatus.OK);
     }
 }

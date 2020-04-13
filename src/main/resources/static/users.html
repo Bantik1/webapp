@@ -10,27 +10,13 @@
     <title>My Blog</title>
 
     <script type="text/javascript">
-        function getAllId() {
+        function initialization() {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "api/select/user/get/all/id");
-            xhr.setRequestHeader("Content-type", "application/json");
-            xhr.send();
-            xhr.onload = (e) => {
-                var allId = JSON.parse(e.target.response);
-                var id = allId.listId;
-                for (var i = 0; i < id.length; i++) {
-                    var option = new Option(id[i], id[i]);
-                    document.getElementById("select").append(option);
-                }
-            }
-        }
-
-        function getUser() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "api/select/user/by/id");
+            xhr.open("POST", "api/select/user/get/first/user");
             xhr.setRequestHeader("Content-type", "application/json");
             xhr.onload = (e) => {
                 var user = JSON.parse(e.target.response);
+                document.getElementById("user_id").textContent = user.id;
                 document.getElementById("input_firstname").textContent = user.name;
                 document.getElementById("input_secondname").textContent = user.secondname;
                 document.getElementById("input_birthday").textContent = user.birthday;
@@ -39,36 +25,58 @@
                 document.getElementById("input_info").textContent = user.info;
                 document.getElementById("input_gender").textContent = user.gender;
             };
-            var user_id = document.getElementById("select").value;
+            xhr.send();
+        }
+
+        function nextUser() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/select/user/next/user");
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.onload = (e) => {
+                var user = JSON.parse(e.target.response);
+                if (user.id != null) {
+                    document.getElementById("user_id").textContent = user.id;
+                    document.getElementById("input_firstname").textContent = user.name;
+                    document.getElementById("input_secondname").textContent = user.secondname;
+                    document.getElementById("input_birthday").textContent = user.birthday;
+                    document.getElementById("input_numberPhone").textContent = user.numberPhone;
+                    document.getElementById("input_groupNumber").textContent = user.groupNumber;
+                    document.getElementById("input_info").textContent = user.info;
+                    document.getElementById("input_gender").textContent = user.gender;
+                } else {
+                    alert("Больше пользователей нет");
+                }
+            };
+            var user_id = document.getElementById("user_id").textContent;
             var params = {"id": user_id};
             xhr.send(JSON.stringify(params));
         }
 
-        function nextUser() {
-            var length = document.getElementById("select").length;
-            var index = document.getElementById("select").selectedIndex;
-            if (index !== -1) {
-                getUser();
-            }
-            if (index === length - 1) {
-                alert("Больше пользователей нет");
-            } else if (index < length - 1) {
-                document.getElementById("select").selectedIndex++;
-            }
+        function prevUser() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/select/user/prev/user");
+            xhr.setRequestHeader("Content-type", "application/json");
+            var user_id = document.getElementById("user_id").textContent;
+            var params = {"id": user_id};
+            xhr.send(JSON.stringify(params));
+            xhr.onload = (e) => {
+                var user = JSON.parse(e.target.response);
+                if (user.id != null) {
+                    document.getElementById("user_id").textContent = user.id;
+                    document.getElementById("input_firstname").textContent = user.name;
+                    document.getElementById("input_secondname").textContent = user.secondname;
+                    document.getElementById("input_birthday").textContent = user.birthday;
+                    document.getElementById("input_numberPhone").textContent = user.numberPhone;
+                    document.getElementById("input_groupNumber").textContent = user.groupNumber;
+                    document.getElementById("input_info").textContent = user.info;
+                    document.getElementById("input_gender").textContent = user.gender;
+                } else {
+                    alert("Больше пользователей нет");
+                }
+            };
         }
 
-        function prevUser(){
-            if (document.getElementById("select").selectedIndex !== -1) {
-                getUser();
-            }
-            if (document.getElementById("select").selectedIndex === 0) {
-                alert("Больше пользователей нет")
-            } else if (document.getElementById("select").selectedIndex > 0) {
-                document.getElementById("select").selectedIndex--;
-            }
-        }
-
-        window.onload = getAllId();
+        window.onload = initialization();
     </script>
 </head>
 <body>
@@ -98,12 +106,12 @@
     </div>
     <div class="content2_blok">
         <h3>Информация</h3>
+        <p id="user_id"></p>
         <p id="input_info"></p>
         <p>Пол: <label id="input_gender"></label></p>
     </div>
     <div class="content2_blok">
         <h3>Найти пользователя</h3>
-        <select id="select" onchange="getUser()"></select>
         <input type="button" value="Следующий" onclick="nextUser()">
         <input type="button" value="Предыдущий" onclick="prevUser()">
     </div>
