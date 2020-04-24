@@ -17,8 +17,8 @@
             xhr.onload = (e) => {
                 var user = JSON.parse(e.target.response);
                 document.getElementById("user_id").textContent = user.id;
-                document.getElementById("input_firstname").textContent = user.name;
-                document.getElementById("input_secondname").textContent = user.secondname;
+                document.getElementById("user_nickname").textContent = user.nickname;
+                document.getElementById("input_secondname").textContent = user.name;
                 document.getElementById("input_birthday").textContent = user.birthday;
                 document.getElementById("input_numberPhone").textContent = user.numberPhone;
                 document.getElementById("input_groupNumber").textContent = user.groupNumber;
@@ -36,8 +36,8 @@
                 var user = JSON.parse(e.target.response);
                 if (user.id != null) {
                     document.getElementById("user_id").textContent = user.id;
-                    document.getElementById("input_firstname").textContent = user.name;
-                    document.getElementById("input_secondname").textContent = user.secondname;
+                    document.getElementById("user_nickname").textContent = user.nickname;
+                    document.getElementById("input_secondname").textContent = user.name;
                     document.getElementById("input_birthday").textContent = user.birthday;
                     document.getElementById("input_numberPhone").textContent = user.numberPhone;
                     document.getElementById("input_groupNumber").textContent = user.groupNumber;
@@ -63,8 +63,8 @@
                 var user = JSON.parse(e.target.response);
                 if (user.id != null) {
                     document.getElementById("user_id").textContent = user.id;
-                    document.getElementById("input_firstname").textContent = user.name;
-                    document.getElementById("input_secondname").textContent = user.secondname;
+                    document.getElementById("user_nickname").textContent = user.nickname;
+                    document.getElementById("input_secondname").textContent = user.name;
                     document.getElementById("input_birthday").textContent = user.birthday;
                     document.getElementById("input_numberPhone").textContent = user.numberPhone;
                     document.getElementById("input_groupNumber").textContent = user.groupNumber;
@@ -86,7 +86,7 @@
         <ul>
             <li><a href="#Obo">Обо мне</a></li>
             <li><a href="#Cont">Контакты</a></li>
-            <li><a href="index.html">Перейти к регистрации</a></li>
+            <li><a href="logout">Выйти</a></li>
         </ul>
     </div>
 </div>
@@ -94,7 +94,7 @@
     <div id="Obo"><h1>Обо мне</h1></div>
     <div class="blok">
         <p>Давайте знакомиться!</p>
-        <p>Меня зовут <label id="input_firstname"></label> <label id="input_secondname"></label></p>
+        <p>Меня зовут <label id="input_secondname"></label></p>
         <p>Мой день рождения <label id="input_birthday"></label></p>
         <p>Учусь в группе <label id="input_groupNumber"></label></p>
     </div>
@@ -106,6 +106,7 @@
     </div>
     <div class="content2_blok">
         <h3>Информация</h3>
+        <p id="user_nickname"></p>
         <p id="user_id"></p>
         <p id="input_info"></p>
         <p>Пол: <label id="input_gender"></label></p>

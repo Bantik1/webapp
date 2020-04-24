@@ -4,13 +4,15 @@ import java.util.Date;
 
 public class User {
     private Integer id;
+    private String nickname;
     private String name;
-    private String secondname;
     private Date birthday;
     private String numberPhone;
-    private String groupNumber;
-    private String info;
+    private String groupNumber = "не указано";
+    private String info = "не указано";
     private String gender;
+    private String password;
+    private String role = "user";
 
     public String getGroupNumber() {
         return groupNumber;
@@ -44,6 +46,14 @@ public class User {
         this.id = id;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public String getName() {
         return name;
     }
@@ -51,10 +61,6 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getSecondname() { return secondname; }
-
-    public void setSecondname(String secondname) { this.secondname = secondname; }
 
     public Date getBirthday() {
         return birthday;
@@ -74,5 +80,21 @@ public class User {
 
     public void setNumberPhone(String numberPhone) {
         this.numberPhone = numberPhone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

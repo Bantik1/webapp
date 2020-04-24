@@ -2,120 +2,26 @@
 <html lang="ru">
 <head>
     <meta charset="utf-8"/>
-    <title>Add User</title>
+    <title>LogIn</title>
     <link rel="stylesheet" href="css/mycss.css"/>
-
-    <script type="text/javascript">
-        function addUser() {
-            if (!isEmpty() && isBirthday() && isPhoneNumber()) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "api/select/user/add/user");
-                xhr.setRequestHeader("Content-type", "application/json");
-                xhr.onload = (e) => {
-                    alert("Отправлено")
-                };
-                var firstname = document.getElementById("input_firstname").value;
-                var secondname = document.getElementById("input_secondname").value;
-                var birthday = document.getElementById("input_birthday").value;
-                var numberPhone = document.getElementById("input_numberPhone").value;
-                var groupNumber = document.getElementById("input_groupNumber").value;
-                var info = document.getElementById("input_info").value;
-                var selectedIndex = document.getElementById("input_gender").selectedIndex;
-                var gender = document.getElementById("input_gender").options[selectedIndex].value;
-                var params = {
-                    "name": firstname,
-                    "secondname": secondname,
-                    "birthday": birthday,
-                    "numberPhone": numberPhone,
-                    "groupNumber": groupNumber,
-                    "info": info,
-                    "gender": gender
-                };
-                xhr.send(JSON.stringify(params));
-            }
-            if (isEmpty()) {
-                alert("Имя и фамилия должны быть заполненны");
-            }
-            if (!isPhoneNumber()) {
-                alert("Номер телефона должен содержать от 10 до 12 символов без букв");
-            }
-            if (!isBirthday()) {
-                alert("День рождение может быть не раньше сегодняшнего дня и не позже 150 лет");
-            }
-        }
-
-        function test() {
-            var selectedIndex = document.getElementById("input_gender").selectedIndex;
-            var gender = document.getElementById("input_gender").options[selectedIndex].value;
-            alert("gender: " + gender);
-        }
-
-        function isEmpty() {
-            var firstname = document.getElementById("input_firstname").value.trim();
-            var secondname = document.getElementById("input_secondname").value.trim();
-            if (firstname === "" || secondname === "") {
-                return true;
-            }
-        }
-
-        function isBirthday() {
-            var input_birthday = document.getElementById("input_birthday").value.split('-');
-            var new_birthday = new Date(input_birthday[0], input_birthday[1] - 1, input_birthday[2]);
-            var now = new Date();
-            var min_birthday = new Date();
-            min_birthday.setFullYear(min_birthday.getFullYear() - 150);
-            if (new_birthday < now && new_birthday > min_birthday) {
-                return true;
-            }
-        }
-
-        function isPhoneNumber() {
-            var regExp = new RegExp("^[+0-9]{9,11}[^A-Za-zА-ЯА-я]$");
-            var number = document.getElementById("input_numberPhone").value;
-            if (regExp.test(number)) {
-                return true;
-            }
-        }
-    </script>
 </head>
 
 <body>
-<table>
-    <tr>
-        <th>Введите имя:</th>
-        <td><input id="input_firstname" type="text" value=""></td>
-    </tr>
-    <tr>
-        <th>Введите фамилию:</th>
-        <td><input id="input_secondname" type="text" value=""></td>
-    </tr>
-    <tr>
-        <th>Введите дату рождения:</th>
-        <td><input id="input_birthday" type="date"></td>
-    </tr>
-    <tr>
-        <th>Введите номер телефона:</th>
-        <td><input id="input_numberPhone" type="text" value=""></td>
-    </tr>
-    <tr>
-        <th>Введите номер группы:</th>
-        <td><input id="input_groupNumber" type="text" value=""></td>
-    </tr>
-    <tr>
-        <th>Введите род деятельности:</th>
-        <td><input id="input_info" type="text" value=""></td>
-    </tr>
-    <tr>
-        <th>Введите пол:</th>
-        <td>
-            <select id="input_gender">
-                <option value="Мужчина">Мужчина</option>
-                <option value="Женщина">Женщина</option>
-            </select>
-        </td>
-    </tr>
-</table>
-<br><input type="button" value="Отправить" onclick="addUser()"><br><br>
-<input type="button" value="Перейти к пользователям" onclick="window.location='users.html'">
+<form method="post">
+    <div>
+        <table>
+            <tr>
+                <td><label>Уникальное имя: </label></td>
+                <td><input type="text" name="username"></td>
+            </tr>
+            <tr>
+                <td><label>Пароль: </label></td>
+                <td><input type="password" name="password"></td>
+            </tr>
+        </table>
+        <input type="submit" id="button" value="Войти" formaction="login">
+        <input type="button" value="Регистрация" onclick="window.location='reg.html'">
+    </div>
+</form>
 </body>
 </html>

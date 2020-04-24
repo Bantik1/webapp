@@ -1,13 +1,10 @@
 package com.example.web.app.dao;
 
-import com.example.web.app.api.request.AllUsersId;
 import com.example.web.app.dao.model.User;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,28 +39,53 @@ public class DbSqlite implements InitializingBean {
         }
     }
 
-    public Boolean addUser(User user) {
-        StringBuilder query = new StringBuilder("insert into USER (name, secondname, birthday, phone_number, group_number, info, gender) values ('");
-        query.append(user.getName());
-        query.append("','");
-        query.append(user.getSecondname());
-        query.append("','");
-        query.append(user.getBirthdayTime());
-        query.append("','");
-        query.append(user.getNumberPhone());
-        query.append("','");
-        query.append(user.getGroupNumber());
-        query.append("','");
-        query.append(user.getInfo());
-        query.append("','");
-        query.append(user.getGender());
-        query.append("');");
+    public Boolean getNickname(String nick) {
+        String query = "select NICKNAME from USER where NICKNAME = '%s'";
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
              Statement stat = conn.createStatement()) {
-            return stat.execute(query.toString());
+            ResultSet resultSet = stat.executeQuery(String.format(query, nick));
+            return resultSet.next();
         } catch (SQLException ex) {
             log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
             return null;
+        }
+    }
+
+    public Boolean addUser(User user) {
+        String query = "insert into USER (nickname, name, birthday, phone_number, group_number, " +
+                "info, gender, password, role) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
+        System.out.println("Запрос: " + String.format(query, user.getNickname(), user.getName(), user.getBirthdayTime(), user.getNumberPhone(),
+                user.getGroupNumber(), user.getInfo(), user.getGender(), user.getPassword(), user.getRole()));
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+             Statement stat = conn.createStatement()) {
+            return stat.execute(String.format(query, user.getNickname(), user.getName(), user.getBirthdayTime(), user.getNumberPhone(),
+                    user.getGroupNumber(), user.getInfo(), user.getGender(), user.getPassword(), user.getRole()));
+        } catch (SQLException ex) {
+            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            return null;
+        }
+    }
+
+    public User getLoginUser(String nick) {
+        String query = "select * from USER where NICKNAME = '%s'";
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+             Statement stat = conn.createStatement()) {
+            ResultSet resultSet = stat.executeQuery(String.format(query, nick));
+            User user = new User();
+            user.setId(resultSet.getInt("id"));
+            user.setBirthday(resultSet.getDate("birthday"));
+            user.setName(resultSet.getString("name"));
+            user.setNickname(resultSet.getString("nickname"));
+            user.setNumberPhone(resultSet.getString("phone_number"));
+            user.setGroupNumber(resultSet.getString("group_number"));
+            user.setInfo(resultSet.getString("info"));
+            user.setGender(resultSet.getString("gender"));
+            user.setPassword(resultSet.getString("password"));
+            user.setRole(resultSet.getString("role"));
+            return user;
+        } catch (SQLException ex) {
+            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            return new User();
         }
     }
 
@@ -72,16 +94,18 @@ public class DbSqlite implements InitializingBean {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
              Statement stat = conn.createStatement()) {
             ResultSet resultSet = stat.executeQuery(query);
-            User user = new User();
-            user.setId(resultSet.getInt("id"));
-            user.setSecondname(resultSet.getString("secondname"));
-            user.setBirthday(resultSet.getDate("birthday"));
-            user.setName(resultSet.getString("name"));
-            user.setNumberPhone(resultSet.getString("phone_number"));
-            user.setGroupNumber(resultSet.getString("group_number"));
-            user.setInfo(resultSet.getString("info"));
-            user.setGender(resultSet.getString("gender"));
-            return user;
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setBirthday(resultSet.getDate("birthday"));
+                user.setName(resultSet.getString("name"));
+                user.setNickname(resultSet.getString("nickname"));
+                user.setNumberPhone(resultSet.getString("phone_number"));
+                user.setGroupNumber(resultSet.getString("group_number"));
+                user.setInfo(resultSet.getString("info"));
+                user.setGender(resultSet.getString("gender"));
+                return user;
+            } else return new User();
         } catch (SQLException ex) {
             log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
             return new User();
@@ -93,16 +117,18 @@ public class DbSqlite implements InitializingBean {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
              Statement stat = conn.createStatement()) {
             ResultSet resultSet = stat.executeQuery(String.format(query, id));
-            User user = new User();
-            user.setId(resultSet.getInt("id"));
-            user.setSecondname(resultSet.getString("secondname"));
-            user.setBirthday(resultSet.getDate("birthday"));
-            user.setName(resultSet.getString("name"));
-            user.setNumberPhone(resultSet.getString("phone_number"));
-            user.setGroupNumber(resultSet.getString("group_number"));
-            user.setInfo(resultSet.getString("info"));
-            user.setGender(resultSet.getString("gender"));
-            return user;
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setBirthday(resultSet.getDate("birthday"));
+                user.setName(resultSet.getString("name"));
+                user.setNickname(resultSet.getString("nickname"));
+                user.setNumberPhone(resultSet.getString("phone_number"));
+                user.setGroupNumber(resultSet.getString("group_number"));
+                user.setInfo(resultSet.getString("info"));
+                user.setGender(resultSet.getString("gender"));
+                return user;
+            } else return new User();
         } catch (SQLException ex) {
             log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
             return new User();
@@ -114,16 +140,18 @@ public class DbSqlite implements InitializingBean {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
              Statement stat = conn.createStatement()) {
             ResultSet resultSet = stat.executeQuery(String.format(query, id));
-            User user = new User();
-            user.setId(resultSet.getInt("id"));
-            user.setSecondname(resultSet.getString("secondname"));
-            user.setBirthday(resultSet.getDate("birthday"));
-            user.setName(resultSet.getString("name"));
-            user.setNumberPhone(resultSet.getString("phone_number"));
-            user.setGroupNumber(resultSet.getString("group_number"));
-            user.setInfo(resultSet.getString("info"));
-            user.setGender(resultSet.getString("gender"));
-            return user;
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setBirthday(resultSet.getDate("birthday"));
+                user.setName(resultSet.getString("name"));
+                user.setNickname(resultSet.getString("nickname"));
+                user.setNumberPhone(resultSet.getString("phone_number"));
+                user.setGroupNumber(resultSet.getString("group_number"));
+                user.setInfo(resultSet.getString("info"));
+                user.setGender(resultSet.getString("gender"));
+                return user;
+            } else return new User();
         } catch (SQLException ex) {
             log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
             return new User();
