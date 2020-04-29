@@ -16,19 +16,23 @@
             };
             xhr.send(JSON.stringify(params));
             xhr.onload = (e) => {
-                if(e.target.response === "true") {
+                if (e.target.response === "true") {
                     if (!isEmpty() && isBirthday() && isPhoneNumber()) {
                         var xhr = new XMLHttpRequest();
                         xhr.open("POST", "api/select/user/add/user");
                         xhr.setRequestHeader("Content-type", "application/json");
                         xhr.onload = (e) => {
-                            alert("Отправлено")
+                            alert("Отправлено");
+                            window.location = 'index.html';
                         };
                         var nickname = document.getElementById("input_firstname").value;
                         var name = document.getElementById("input_secondname").value;
                         var birthday = document.getElementById("input_birthday").value;
                         var numberPhone = document.getElementById("input_numberPhone").value;
                         var groupNumber = document.getElementById("input_groupNumber").value;
+                        if (groupNumber === "") {
+                            groupNumber = "*не указано*";
+                        }
                         var info = selectCheckboxes();
                         var selectedIndex = document.getElementById("input_gender").selectedIndex;
                         var gender = document.getElementById("input_gender").options[selectedIndex].value;
@@ -42,12 +46,12 @@
                             "info": info,
                             "gender": gender,
                             "password": password,
-                            "role": "user"
+                            "role": "USER"
                         };
                         xhr.send(JSON.stringify(params));
                     }
                     if (isEmpty()) {
-                        alert("Поля 'уникальное имя' и 'имя' должны быть заполненны");
+                        alert("Поля 'уникальное имя', 'имя' и 'пароль' должны быть заполненны");
                     }
                     if (!isPhoneNumber()) {
                         alert("Номер телефона должен содержать от 10 до 12 символов без букв");
@@ -100,6 +104,9 @@
                     checkboxesChecked += checkboxes[i].value;
                 }
             }
+            if (checkboxesChecked === "") {
+                checkboxesChecked = "*не указано*";
+            }
             return checkboxesChecked;
         }
     </script>
@@ -150,6 +157,6 @@
     </tr>
 </table>
 <br><input type="button" value="Отправить" onclick="addUser()"><br><br>
-<input type="button" value="Перейти к пользователям" onclick="window.location='users.html'">
+<input type="button" value="Перейти к авторизации" onclick="window.location='index.html'">
 </body>
 </html>

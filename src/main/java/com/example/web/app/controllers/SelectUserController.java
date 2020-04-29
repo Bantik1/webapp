@@ -23,10 +23,12 @@ import java.util.List;
 public class SelectUserController {
     private final DbSqlite dbSqlite;
     private final PasswordEncoder passwordEncoder;
+    private final DataVerificationService verification;
 
-    public SelectUserController(DbSqlite dbSqlite, PasswordEncoder passwordEncoder) {
+    public SelectUserController(DbSqlite dbSqlite, PasswordEncoder passwordEncoder, DataVerificationService verificationService) {
         this.dbSqlite = dbSqlite;
         this.passwordEncoder = passwordEncoder;
+        this.verification = verificationService;
     }
 
     @ApiOperation(value = "get first user")
@@ -34,6 +36,16 @@ public class SelectUserController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getFirstUser() {
         User user = dbSqlite.getFirstUser();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(user, headers, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "get current user")
+    @RequestMapping(value = "get/current/user", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> getCurrentUser() {
+        User user = dbSqlite.getCurrentUser(SecurityContextHolder.getContext().getAuthentication().getName());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(user, headers, HttpStatus.OK);
@@ -65,7 +77,6 @@ public class SelectUserController {
     public ResponseEntity<Boolean> getNickname(@RequestBody UserByIdRequest user) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        DataVerificationService verification = new DataVerificationService();
         String error = verification.getNickname(user.getNickname());
         if (!error.isEmpty()) {
             return new ResponseEntity<>(false, headers, HttpStatus.BAD_REQUEST);
@@ -81,10 +92,21 @@ public class SelectUserController {
         String passwordEncode = passwordEncoder.encode(user.getPassword());
         user.setPassword(passwordEncode);
         user.setNickname(user.getNickname().toLowerCase());
-        DataVerificationService verification = new DataVerificationService();
         List<String> errors = verification.getErrors(user);
         if (errors.isEmpty()) {
             return new ResponseEntity<>(dbSqlite.addUser(user), headers, HttpStatus.OK);
+        } else return new ResponseEntity<>(errors, headers, HttpStatus.BAD_REQUEST);
+    }
+
+    @ApiOperation(value = "Редактировать")
+    @RequestMapping(value = "edit/user", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> editUser(@RequestBody User user) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        List<String> errors = verification.getEditErrors(user);
+        if (errors.isEmpty()) {
+            return new ResponseEntity<>(dbSqlite.editUser(user), headers, HttpStatus.OK);
         } else return new ResponseEntity<>(errors, headers, HttpStatus.BAD_REQUEST);
     }
 

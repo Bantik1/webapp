@@ -31,6 +31,20 @@ public class DataVerificationService {
         return  errors;
     }
 
+    public List<String> getEditErrors(User user) {
+        List<String> errors = new ArrayList<>();
+        if(!getName(user.getName())) {
+            errors.add("Поле 'имя' не заполнено");
+        }
+        if(!checkBirth(user.getBirthday())) {
+            errors.add("ДР заполнено не правильно");
+        }
+        if(!checkPhone(user.getNumberPhone())) {
+            errors.add("Номер телефона заполнен не правильно");
+        }
+        return  errors;
+    }
+
     public String getNickname(String nick) {
         String error = "";
         if(dbSqlite.getNickname(nick)) {

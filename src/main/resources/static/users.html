@@ -12,7 +12,7 @@
     <script type="text/javascript">
         function initialization() {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "api/select/user/get/first/user");
+            xhr.open("POST", "api/select/user/get/current/user");
             xhr.setRequestHeader("Content-type", "application/json");
             xhr.onload = (e) => {
                 var user = JSON.parse(e.target.response);
@@ -24,8 +24,29 @@
                 document.getElementById("input_groupNumber").textContent = user.groupNumber;
                 document.getElementById("input_info").textContent = user.info;
                 document.getElementById("input_gender").textContent = user.gender;
+                if(user.role === "ADMIN") {
+                    addButtons();
+                }
             };
             xhr.send();
+        }
+
+        window.onload = initialization();
+
+        function addButtons() {
+            var header = document.createElement("h3");
+            header.textContent = "Найти пользователя";
+            document.getElementById("content2_blok").append(header);
+            var next = document.createElement("input");
+            next.setAttribute("type", "button");
+            next.setAttribute("value", "Следующий");
+            next.setAttribute("onclick", "nextUser()");
+            document.getElementById("content2_blok").append(next);
+            var prev = document.createElement("input");
+            prev.setAttribute("type", "button");
+            prev.setAttribute("value", "Предыдущий");
+            prev.setAttribute("onclick", "prevUser()");
+            document.getElementById("content2_blok").append(prev);
         }
 
         function nextUser() {
@@ -76,7 +97,7 @@
             };
         }
 
-        window.onload = initialization();
+
     </script>
 </head>
 <body>
@@ -106,15 +127,13 @@
     </div>
     <div class="content2_blok">
         <h3>Информация</h3>
-        <p id="user_nickname"></p>
-        <p id="user_id"></p>
-        <p id="input_info"></p>
+        <p>Уникальное имя: <label id="user_nickname"></label></p>
+        <p>ID: <label id="user_id"></label></p>
+        <p>Род занятий: <label id="input_info"></label></p>
         <p>Пол: <label id="input_gender"></label></p>
     </div>
-    <div class="content2_blok">
-        <h3>Найти пользователя</h3>
-        <input type="button" value="Следующий" onclick="nextUser()">
-        <input type="button" value="Предыдущий" onclick="prevUser()">
+    <div class="content2_blok" id="content2_blok">
+        <input type="button" value="Редактировать данные" onclick="window.location='editData.html'">
     </div>
 </div>
 </body>
