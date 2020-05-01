@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <title>Edit Data</title>
+    <link rel="stylesheet" href="css/mycss.css"/>
+
+    <script type="text/javascript">
+        function initialization() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/select/user/get/current/user");
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.onload = (e) => {
+                var user = JSON.parse(e.target.response);
+                document.getElementById("input_firstname").value = user.nickname;
+                document.getElementById("input_secondname").value = user.name;
+                document.getElementById("input_birthday").value = user.birthday;
+                document.getElementById("input_numberPhone").value = user.numberPhone;
+                document.getElementById("input_groupNumber").value = user.groupNumber;
+            };
+            xhr.send();
+        }
+
+        window.onload = initialization();
+
+        function editUser() {
+            if (!isEmpty() && isBirthday() && isPhoneNumber()) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "api/select/user/edit/user");
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.onload = (e) => {
+                    alert("Отредактировано");
+                    window.location = 'users.html';
+                };
+                var nickname = document.getElementById("input_firstname").value;
+                var name = document.getElementById("input_secondname").value;
+                var birthday = document.getElementById("input_birthday").value;
+                var numberPhone = document.getElementById("input_numberPhone").value;
+                var groupNumber = document.getElementById("input_groupNumber").value;
+                if (groupNumber === "") {
+                    groupNumber = "*не указано*";
+                }
+                var info = selectCheckboxes();
+                var selectedIndex = document.getElementById("input_gender").selectedIndex;
+                var gender = document.getElementById("input_gender").options[selectedIndex].value;
+                var params = {
+                    "nickname": nickname,
+                    "name": name,
+                    "birthday": birthday,
+                    "numberPhone": numberPhone,
+                    "groupNumber": groupNumber,
+                    "info": info,
+                    "gender": gender
+                };
+                xhr.send(JSON.stringify(params));
+            }
+            if (isEmpty()) {
+                alert("Поле 'имя' должно быть заполненно");
+            }
+            if (!isPhoneNumber()) {
+                alert("Номер телефона должен содержать от 10 до 12 символов без букв");
+            }
+            if (!isBirthday()) {
+                alert("День рождение может быть не раньше сегодняшнего дня и не позже 150 лет");
+            }
+        }
+
+        function isEmpty() {
+            var secondname = document.getElementById("input_secondname").value.trim();
+            if (secondname === "") {
+                return true;
+            }
+        }
+
+        function isBirthday() {
+            var input_birthday = document.getElementById("input_birthday").value.split('-');
+            var new_birthday = new Date(input_birthday[0], input_birthday[1] - 1, input_birthday[2]);
+            var now = new Date();
+            var min_birthday = new Date();
+            min_birthday.setFullYear(min_birthday.getFullYear() - 150);
+            if (new_birthday < now && new_birthday > min_birthday) {
+                return true;
+            }
+        }
+
+        function isPhoneNumber() {
+            var regExp = new RegExp("^[+0-9]{9,11}[^A-Za-zА-ЯА-я]$");
+            var number = document.getElementById("input_numberPhone").value;
+            if (regExp.test(number)) {
+                return true;
+            }
+        }
+
+        function selectCheckboxes() {
+            var checkboxes = document.getElementsByClassName("input_info");
+            var checkboxesChecked = "";
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    if (checkboxesChecked !== "") {
+                        checkboxesChecked += ", ";
+                    }
+                    checkboxesChecked += checkboxes[i].value;
+                }
+            }
+            if (checkboxesChecked === "") {
+                checkboxesChecked = "*не указано*";
+            }
+            return checkboxesChecked;
+        }
+    </script>
+</head>
+
+<body>
+<table>
+    <tr>
+        <th>Уникальное имя:</th>
+        <td><input id="input_firstname" type="text" value="" readonly></td>
+    </tr>
+    <tr>
+        <th>Введите имя:</th>
+        <td><input id="input_secondname" type="text" value=""></td>
+    </tr>
+    <tr>
+        <th>Введите дату рождения:</th>
+        <td><input id="input_birthday" type="date"></td>
+    </tr>
+    <tr>
+        <th>Введите номер телефона:</th>
+        <td><input id="input_numberPhone" type="text" value=""></td>
+    </tr>
+    <tr>
+        <th>Введите номер группы:</th>
+        <td><input id="input_groupNumber" type="text" value=""></td>
+    </tr>
+    <tr>
+        <th>Введите пол:</th>
+        <td>
+            <select id="input_gender">
+                <option value="Мужчина">Мужчина</option>
+                <option value="Женщина">Женщина</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>Учитесь?</td>
+        <td><input class="input_info" type="checkbox" value="Учусь"></td>
+    </tr>
+    <tr>
+        <td>Работаете?</td>
+        <td><input class="input_info" type="checkbox" value="Работаю"></td>
+    </tr>
+</table>
+<br><input type="button" value="Редактировать" onclick="editUser()"><br><br>
+</body>
+</html>
