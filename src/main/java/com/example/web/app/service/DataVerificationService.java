@@ -12,7 +12,9 @@ import java.util.regex.Pattern;
 
 @Service
 public class DataVerificationService {
-    private DbSqlite dbSqlite = new DbSqlite();
+    private final  DbSqlite dbSqlite;
+
+    public  DataVerificationService(DbSqlite dbSqlite) {this.dbSqlite = dbSqlite;}
 
     public List<String> getErrors(User user) {
         List<String> errors = new ArrayList<>();
